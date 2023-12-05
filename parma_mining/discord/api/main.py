@@ -28,7 +28,7 @@ def root():
     return {"welcome": "at parma-mining-discord"}
 
 
-@app.get("/server", status_code=status.HTTP_200_OK)
+@app.post("/server", status_code=status.HTTP_200_OK)
 def get_server_details(servers: ServersRequest) -> List[ServerModel]:
     _discordClient = DiscordClient(authorization_key, base_url)
     all_server_details = []
@@ -40,7 +40,7 @@ def get_server_details(servers: ServersRequest) -> List[ServerModel]:
     return all_server_details
 
 
-@app.get("/channel", status_code=status.HTTP_200_OK)
+@app.post("/channel", status_code=status.HTTP_200_OK)
 def get_channel_details(channels: ChannelsRequest) -> List[List[ChannelMessage]]:
     _discordClient = DiscordClient(authorization_key, base_url)
     all_channel_details = []
