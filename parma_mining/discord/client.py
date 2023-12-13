@@ -1,8 +1,6 @@
-from fastapi import HTTPException
 import httpx
+from fastapi import HTTPException
 from httpx import Response
-from typing import List
-from urllib.parse import urljoin
 
 from parma_mining.discord.model import ChannelMessage, ServerModel
 
@@ -27,7 +25,7 @@ class DiscordClient:
 
     def get_channel_messages(
         self, channel_id: str, number_of_messages: int
-    ) -> List[ChannelMessage]:
+    ) -> list[ChannelMessage]:
         path = "/channels/" + channel_id + "/messages"
         params = {"limit": str(number_of_messages)}
         try:

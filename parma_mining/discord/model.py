@@ -1,42 +1,40 @@
-from typing import Any, List, Optional, Dict
-
 from pydantic import BaseModel, Field
 
 
 class ServerModel(BaseModel):
     id: str
     name: str
-    description: Optional[str]
-    features: Optional[List[str]]
-    owner_id: Optional[str]
-    region: Optional[str]
-    max_presences: Optional[int]
-    max_members: Optional[int]
-    preferred_locale: Optional[str]
-    premium_tier: Optional[int]
-    premium_subscription_count: Optional[int]
-    approximate_member_count: Optional[int]
-    approximate_presence_count: Optional[int]
+    description: str | None
+    features: list[str] | None
+    owner_id: str | None
+    region: str | None
+    max_presences: int | None
+    max_members: int | None
+    preferred_locale: str | None
+    premium_tier: int | None
+    premium_subscription_count: int | None
+    approximate_member_count: int | None
+    approximate_presence_count: int | None
 
 
 class MessageAuthor(BaseModel):
     id: str
-    username: Optional[str]
+    username: str | None
 
 
 class ChannelMessage(BaseModel):
     id: str
-    channel_id: Optional[str]
-    content: Optional[str]
-    author: Optional[MessageAuthor]
+    channel_id: str | None
+    content: str | None
+    author: MessageAuthor | None
 
 
 class ServersRequest(BaseModel):
-    servers: Dict[str, List[str]]
+    servers: dict[str, list[str]]
     type: str
 
 
 class ChannelsRequest(BaseModel):
-    channels: Dict[str, List[str]]
-    limit: Optional[int] = Field(None, ge=0, le=100)
+    channels: dict[str, list[str]]
+    limit: int | None = Field(None, ge=0, le=100)
     type: str
