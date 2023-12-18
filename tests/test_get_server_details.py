@@ -1,8 +1,9 @@
-from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
-import pytest
-from parma_mining.discord.api.main import app
 
+import pytest
+from fastapi.testclient import TestClient
+
+from parma_mining.discord.api.main import app
 
 client = TestClient(app)
 
@@ -15,7 +16,7 @@ def mock_pdl_client(mocker) -> MagicMock:
     mock.return_value = {
         "id": "363985050578190336",
         "name": "English",
-        "description": "Join the best place to practice your English skills, with thousands of native speakers and other eager learners!",
+        "description": "Join the best place to practice your English skills",
         "features": [
             "ANIMATED_ICON",
             "GUILD_COMMUNICATION_DISABLED_GUILDS",
@@ -37,13 +38,13 @@ def mock_pdl_client(mocker) -> MagicMock:
 def test_get_server_details(mock_pdl_client: MagicMock):
     payload = {"servers": {"test": ["testid"]}, "type": "server_id"}
     response = client.post("/server", json=payload)
-    print(response.json())
-    assert response.status_code == 200
+    success_code = 200
+    assert response.status_code == success_code
     assert response.json() == [
         {
             "id": "363985050578190336",
             "name": "English",
-            "description": "Join the best place to practice your English skills, with thousands of native speakers and other eager learners!",
+            "description": "Join the best place to practice your English skills",
             "features": [
                 "ANIMATED_ICON",
                 "GUILD_COMMUNICATION_DISABLED_GUILDS",
