@@ -1,5 +1,5 @@
 import httpx
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from httpx import Response
 
 from parma_mining.discord.model import ChannelMessage, ServerModel
@@ -32,7 +32,7 @@ class DiscordClient:
             response = self.get(path, params)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
-            if exc.response.status_code == 404:
+            if exc.response.status_code == status.HTTP_404_NOT_FOUND:
                 error_detail = "Channel not found."
             else:
                 error_detail = str(exc)
@@ -52,7 +52,7 @@ class DiscordClient:
             response = self.get(path, params)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
-            if exc.response.status_code == 404:
+            if exc.response.status_code == status.HTTP_404_NOT_FOUND:
                 error_detail = "Server not found."
             else:
                 error_detail = str(exc)

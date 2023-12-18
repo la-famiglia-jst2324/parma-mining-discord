@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 import pytest
+from fastapi import status
 from fastapi.testclient import TestClient
 
 from parma_mining.discord.api.main import app
@@ -38,8 +39,7 @@ def mock_pdl_client(mocker) -> MagicMock:
 def test_get_server_details(mock_pdl_client: MagicMock):
     payload = {"servers": {"test": ["testid"]}, "type": "server_id"}
     response = client.post("/server", json=payload)
-    success_code = 200
-    assert response.status_code == success_code
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == [
         {
             "id": "363985050578190336",

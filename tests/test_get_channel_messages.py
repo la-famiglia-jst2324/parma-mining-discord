@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock
 
 import pytest
+from fastapi import status
 from fastapi.testclient import TestClient
 
 from parma_mining.discord.api.main import app
@@ -33,8 +34,7 @@ def mock_pdl_client(mocker) -> MagicMock:
 def test_get_channel_messages(mock_pdl_client: MagicMock):
     payload = {"channels": {"test": ["testid"]}, "type": "channel_id", "limit": 50}
     response = client.post("/channel", json=payload)
-    success_code = 200
-    assert response.status_code == success_code
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == [
         [
             {
