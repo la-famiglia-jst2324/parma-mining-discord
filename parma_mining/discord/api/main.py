@@ -30,6 +30,7 @@ def root():
 
 @app.post("/server", status_code=status.HTTP_200_OK)
 def get_server_details(servers: ServersRequest) -> list[ServerModel]:
+    """Endpoint to get detailed information about a dict of servers."""
     discord_client = DiscordClient(authorization_key, base_url)
     all_server_details = []
 
@@ -42,6 +43,7 @@ def get_server_details(servers: ServersRequest) -> list[ServerModel]:
 
 @app.post("/channel", status_code=status.HTTP_200_OK)
 def get_channel_details(channels: ChannelsRequest) -> list[list[ChannelMessage]]:
+    """Endpoint to get detailed information about a dict of channels."""
     discord_client = DiscordClient(authorization_key, base_url)
     all_channel_details = []
 
