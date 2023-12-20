@@ -1,3 +1,6 @@
+"""Discord API client."""
+from urllib.parse import urljoin
+
 import httpx
 from fastapi import HTTPException, status
 from httpx import Response
@@ -6,14 +9,16 @@ from parma_mining.discord.model import ChannelMessage, ServerModel
 
 
 class DiscordClient:
+    """Discord API client."""
+
     def __init__(self, authorization_key: str, base_url: str):
+        """Initialize Discord API client."""
         self.authorization_key = authorization_key
         self.base_url = base_url
 
     def get(self, path: str, params: dict[str, str]) -> Response:
-        full_path = (
-            self.base_url + path
-        )  # TODO : Make this concat with urljoin if possible
+        """Make a GET request to the Discord API."""
+        full_path = urljoin(self.base_url, path)
         return httpx.get(
             url=full_path,
             headers={
@@ -26,6 +31,7 @@ class DiscordClient:
     def get_channel_messages(
         self, channel_id: str, number_of_messages: int
     ) -> list[ChannelMessage]:
+        """Get the last n messages from a channel."""
         path = "/channels/" + channel_id + "/messages"
         params = {"limit": str(number_of_messages)}
         try:
@@ -46,6 +52,7 @@ class DiscordClient:
         return messages
 
     def get_server_details(self, server_id: str) -> ServerModel:
+        """Get detailed information about a server."""
         path = "/guilds/" + server_id
         params = {"with_counts": "True"}
         try:

@@ -1,7 +1,13 @@
+"""Pydantic models for discord data."""
 from pydantic import BaseModel, Field
 
 
 class ServerModel(BaseModel):
+    """Server model for discord data.
+
+    Used for /server endpoint.
+    """
+
     id: str
     name: str
     description: str | None
@@ -18,11 +24,18 @@ class ServerModel(BaseModel):
 
 
 class MessageAuthor(BaseModel):
+    """Message author model for discord data."""
+
     id: str
     username: str | None
 
 
 class ChannelMessage(BaseModel):
+    """Channel message model for discord data.
+
+    Used for /channel endpoint.
+    """
+
     id: str
     channel_id: str | None
     content: str | None
@@ -30,11 +43,15 @@ class ChannelMessage(BaseModel):
 
 
 class ServersRequest(BaseModel):
+    """/server Endpoint request model."""
+
     servers: dict[str, list[str]]
     type: str
 
 
 class ChannelsRequest(BaseModel):
+    """/channel Endpoint request model."""
+
     channels: dict[str, list[str]]
     limit: int | None = Field(None, ge=0, le=100)
     type: str
