@@ -1,4 +1,5 @@
 """Discord API client."""
+import logging
 from urllib.parse import urljoin
 
 import httpx
@@ -6,6 +7,8 @@ from fastapi import HTTPException, status
 from httpx import Response
 
 from parma_mining.discord.model import ChannelMessage, ServerModel
+
+logger = logging.getLogger(__name__)
 
 
 class DiscordClient:
@@ -38,6 +41,11 @@ class DiscordClient:
             response = self.get(path, params)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
+            logger.error(
+                f"Error response {exc.response.status_code} "
+                f"for channel {channel_id}: {str(exc)}"
+            )
+
             if exc.response.status_code == status.HTTP_404_NOT_FOUND:
                 error_detail = "Channel not found."
             else:
@@ -59,6 +67,11 @@ class DiscordClient:
             response = self.get(path, params)
             response.raise_for_status()
         except httpx.HTTPStatusError as exc:
+            logger.error(
+                f"Error response {exc.response.status_code} "
+                f"for server {server_id}: {str(exc)}"
+            )
+
             if exc.response.status_code == status.HTTP_404_NOT_FOUND:
                 error_detail = "Server not found."
             else:
