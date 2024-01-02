@@ -1,5 +1,5 @@
 """Main entrypoint for the API routes in of parma-analytics."""
-
+import logging
 import os
 
 from dotenv import load_dotenv
@@ -13,6 +13,10 @@ from parma_mining.discord.model import (
     ServersRequest,
 )
 
+logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger(__name__)
+
 load_dotenv()
 
 authorization_key = str(os.getenv("DISCORD_AUTH_KEY"))
@@ -25,6 +29,7 @@ app = FastAPI()
 @app.get("/", status_code=200)
 def root():
     """Root endpoint for the API."""
+    logger.debug("Root endpoint called")
     return {"welcome": "at parma-mining-discord"}
 
 
