@@ -1,12 +1,27 @@
+import logging
 from unittest.mock import MagicMock
 
 import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
 
+from parma_mining.discord.api.dependencies.auth import authenticate
+from parma_mining.discord.api.dependencies.mock_auth import mock_authenticate
 from parma_mining.discord.api.main import app
 
-client = TestClient(app)
+
+@pytest.fixture
+def client():
+    assert app
+    app.dependency_overrides.update(
+        {
+            authenticate: mock_authenticate,
+        }
+    )
+    return TestClient(app)
+
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
@@ -31,7 +46,7 @@ def mock_pdl_client(mocker) -> MagicMock:
     return mock
 
 
-def test_get_channel_messages(mock_pdl_client: MagicMock):
+def test_get_channel_messages(client: TestClient, mock_pdl_client: MagicMock):
     payload = {"channels": {"test": ["testid"]}, "type": "channel_id", "limit": 50}
     response = client.post("/channel", json=payload)
     assert response.status_code == status.HTTP_200_OK

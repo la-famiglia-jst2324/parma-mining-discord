@@ -10,11 +10,11 @@ description = ""
 readme = "README.md"
 dynamic = ["version"]
 authors = [
-    { name = "Robin Holzinger", email = "robin.holzinger@tum.de" },
+  {name = "Robin Holzinger", email = "robin.holzinger@tum.de"},
 ]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
 ]
 requires-python = ">=3.11"
 

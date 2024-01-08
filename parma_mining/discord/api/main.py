@@ -3,8 +3,9 @@ import logging
 import os
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, status
+from fastapi import Depends, FastAPI, status
 
+from parma_mining.discord.api.dependencies.auth import authenticate
 from parma_mining.discord.client import DiscordClient
 from parma_mining.discord.model import (
     ChannelMessage,
@@ -34,7 +35,9 @@ def root():
 
 
 @app.post("/server", status_code=status.HTTP_200_OK)
-def get_server_details(servers: ServersRequest) -> list[ServerModel]:
+def get_server_details(
+    servers: ServersRequest, token: str = Depends(authenticate)
+) -> list[ServerModel]:
     """Endpoint to get detailed information about a dict of servers."""
     discord_client = DiscordClient(authorization_key, base_url)
     all_server_details = []
@@ -47,7 +50,9 @@ def get_server_details(servers: ServersRequest) -> list[ServerModel]:
 
 
 @app.post("/channel", status_code=status.HTTP_200_OK)
-def get_channel_details(channels: ChannelsRequest) -> list[list[ChannelMessage]]:
+def get_channel_details(
+    channels: ChannelsRequest, token: str = Depends(authenticate)
+) -> list[list[ChannelMessage]]:
     """Endpoint to get detailed information about a dict of channels."""
     discord_client = DiscordClient(authorization_key, base_url)
     all_channel_details = []
