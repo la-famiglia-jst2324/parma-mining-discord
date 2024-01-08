@@ -6,8 +6,8 @@ from fastapi import status
 from fastapi.testclient import TestClient
 
 from parma_mining.discord.api.dependencies.auth import authenticate
-from parma_mining.discord.api.dependencies.mock_auth import mock_authenticate
 from parma_mining.discord.api.main import app
+from tests.dependencies.mock_auth import mock_authenticate
 
 
 @pytest.fixture
