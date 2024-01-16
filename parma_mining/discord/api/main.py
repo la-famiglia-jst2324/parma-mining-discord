@@ -14,7 +14,7 @@ from parma_mining.discord.model import (
     ServersRequest,
 )
 
-env = os.getenv("env", "local")
+env = os.getenv("DEPLOYMENT_ENV", "local")
 
 if env == "prod":
     logging.basicConfig(level=logging.INFO)
