@@ -29,6 +29,7 @@ class DiscordClient:
                 "Authorization": self.authorization_key,
             },
             params=params,
+            timeout=30,
         )
 
     def get_channel_messages(
