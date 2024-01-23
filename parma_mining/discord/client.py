@@ -37,32 +37,6 @@ class DiscordClient:
             timeout=30,
         )
 
-    def get_channel_messages(
-        self, channel_id: str, number_of_messages: int
-    ) -> list[ChannelMessage]:
-        """Get the last n messages from a channel."""
-        path = "/channels/" + channel_id + "/messages"
-        params = {"limit": str(number_of_messages)}
-        try:
-            response = self.get(path, params)
-            response.raise_for_status()
-        except httpx.HTTPStatusError as exc:
-            logger.error(
-                f"Error response {exc.response.status_code} "
-                f"for channel {channel_id}: {str(exc)}"
-            )
-            if exc.response.status_code == status.HTTP_404_NOT_FOUND:
-                error_detail = "Channel not found."
-            else:
-                error_detail = str(exc)
-            raise CrawlingError(error_detail)
-
-        messages = []
-        for message in response.json():
-            parsed_message = ChannelMessage.model_validate(message)
-            messages.append(parsed_message)
-        return messages
-
     def get_all_servers(self) -> list[ServerListModel]:
         """Get all servers that user has joined."""
         path = "/users/@me/guilds"
@@ -118,3 +92,29 @@ class DiscordClient:
             raise CrawlingError(error_detail)
         parsed_server = ServerModel.model_validate(response.json())
         return parsed_server
+
+    def get_channel_messages(
+        self, channel_id: str, number_of_messages: int
+    ) -> list[ChannelMessage]:
+        """Get the last n messages from a channel."""
+        path = "/channels/" + channel_id + "/messages"
+        params = {"limit": str(number_of_messages)}
+        try:
+            response = self.get(path, params)
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            logger.error(
+                f"Error response {exc.response.status_code} "
+                f"for channel {channel_id}: {str(exc)}"
+            )
+            if exc.response.status_code == status.HTTP_404_NOT_FOUND:
+                error_detail = "Channel not found."
+            else:
+                error_detail = str(exc)
+            raise CrawlingError(error_detail)
+
+        messages = []
+        for message in response.json():
+            parsed_message = ChannelMessage.model_validate(message)
+            messages.append(parsed_message)
+        return messages
