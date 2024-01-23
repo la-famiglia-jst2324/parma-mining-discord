@@ -89,7 +89,9 @@ def get_organization_details(
                 try:
                     server_details = discord_client.get_server_details(handle)
                 except CrawlingError as e:
-                    logger.error(f"Can't fetch company details from GitHub. Error: {e}")
+                    logger.error(
+                        f"Can't fetch company details from Discord. Error: {e}"
+                    )
                     collect_errors(company_id, errors, e)
                     continue
 
