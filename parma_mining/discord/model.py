@@ -72,14 +72,14 @@ class ChannelsRequest(BaseModel):
 
 
 class CompaniesRequest(BaseModel):
-    """Companies request model for GitHub data."""
+    """Companies request model for Discord data."""
 
     task_id: int
     companies: dict[str, dict[str, list[str]]]
 
 
 class ResponseModel(BaseModel):
-    """Response model for GitHub data."""
+    """Response model for Discord data."""
 
     source_name: str
     company_id: str
