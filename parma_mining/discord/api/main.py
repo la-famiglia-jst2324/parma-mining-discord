@@ -138,7 +138,6 @@ def discover_companies(
         logger.debug(
             f"Discovering with name: {company.name} for company_id {company.company_id}"
         )
-        print(company.name)
         response = discord_client.search_organizations(company.name)
         response_data[company.company_id] = response
 
