@@ -13,13 +13,18 @@ from parma_mining.discord.client import DiscordClient
 from parma_mining.discord.helper import collect_errors
 from parma_mining.discord.model import (
     CompaniesRequest,
+    CrawlingFinishedInputModel,
     DiscoveryRequest,
     ErrorInfoModel,
     FinalDiscoveryResponse,
     ResponseModel,
 )
 from parma_mining.discord.normalization_map import DiscordNormalizationMap
-from parma_mining.mining_common.exceptions import ClientInvalidBodyError, CrawlingError
+from parma_mining.mining_common.exceptions import (
+    AnalyticsError,
+    ClientInvalidBodyError,
+    CrawlingError,
+)
 
 env = os.getenv("DEPLOYMENT_ENV", "local")
 
@@ -72,11 +77,11 @@ def initialize(source_id: int, token: str = Depends(authenticate)) -> str:
 
 
 @app.post("/companies", status_code=status.HTTP_200_OK)
-def get_organization_details(body: CompaniesRequest):  # don't forget to add the token
+def get_organization_details(
+    body: CompaniesRequest, token: str = Depends(authenticate)
+):
     """Endpoint to get detailed information about a dict of servers."""
     errors: dict[str, ErrorInfoModel] = {}
-
-    all_server_details = []
 
     for company_id, company_data in body.companies.items():
         for data_type, handles in company_data.items():
@@ -88,14 +93,28 @@ def get_organization_details(body: CompaniesRequest):  # don't forget to add the
                     collect_errors(company_id, errors, e)
                     continue
 
-                _ = ResponseModel(
+                data = ResponseModel(
                     source_name="discord",
                     company_id=company_id,
                     raw_data=server_details,
                 )
+                # Write data to db via endpoint in analytics backend
+                try:
+                    analytics_client.feed_raw_data(token, data)
+                except AnalyticsError as e:
+                    logger.error(
+                        f"Can't send crawling data to the Analytics. Error: {e}"
+                    )
+                    collect_errors(company_id, errors, e)
 
-                all_server_details.append(server_details)
-    return all_server_details
+    return analytics_client.crawling_finished(
+        token,
+        json.loads(
+            CrawlingFinishedInputModel(
+                task_id=body.task_id, errors=errors
+            ).model_dump_json()
+        ),
+    )
 
 
 @app.post(
@@ -104,7 +123,7 @@ def get_organization_details(body: CompaniesRequest):  # don't forget to add the
     status_code=status.HTTP_200_OK,
 )
 def discover_companies(
-    request: list[DiscoveryRequest],  # token: str = Depends(authenticate)
+    request: list[DiscoveryRequest], token: str = Depends(authenticate)
 ):
     """Endpoint to discover organizations based on provided names."""
     if not request:
