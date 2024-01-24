@@ -56,6 +56,14 @@ resource "google_cloud_run_service" "parma_mining_discord_cloud_run" {
           name  = "DEPLOYMENT_ENV"
           value = var.env
         }
+        env {
+          name  = "DISCORD_BASE_URL"
+          value = var.DISCORD_BASE_URL
+        }
+        env {
+          name  = "DISCORD_AUTH_KEY"
+          value = var.DISCORD_AUTH_KEY
+        }
       }
     }
 
