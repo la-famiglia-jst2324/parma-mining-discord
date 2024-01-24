@@ -21,7 +21,7 @@ env:
   TF_VAR_PARMA_SHARED_SECRET_KEY: ${{ github.event_name == 'release' && secrets.PROD_PARMA_SHARED_SECRET_KEY || secrets.STAGING_PARMA_SHARED_SECRET_KEY}}
 
   # Discord
-  TF_VAR_DISCORD_BASE_URL: ${{ github.event_name == 'release' && secrets.PROD_DISCORD_BASE_URL || secrets.STAGING_DISCORD_BASE_URL}}
+  TF_VAR_DISCORD_BASE_URL: ${{ github.event_name == 'release' && vars.PROD_DISCORD_BASE_URL || vars.STAGING_DISCORD_BASE_URL}}
   TF_VAR_DISCORD_AUTH_KEY: ${{ github.event_name == 'release' && secrets.PROD_DISCORD_AUTH_KEY || secrets.STAGING_DISCORD_AUTH_KEY}}
 
 jobs:
