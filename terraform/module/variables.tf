@@ -25,3 +25,17 @@ variable "PARMA_SHARED_SECRET_KEY" {
   type        = string
   sensitive   = true
 }
+
+/* ------------------------------------ Discord ------------------------------------ */
+
+variable "DISCORD_BASE_URL" {
+  description = "Discord base url"
+  type        = string
+  sensitive   = false
+}
+
+variable "DISCORD_AUTH_KEY" {
+  description = "Discord auth key"
+  type        = string
+  sensitive   = true
+}
