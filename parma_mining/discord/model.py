@@ -1,5 +1,19 @@
 """Pydantic models for discord data."""
+from datetime import datetime
+
 from pydantic import BaseModel, Field
+
+
+class ServerListModel(BaseModel):
+    """Listed servers model."""
+
+    id: str
+    name: str | None
+    owner: bool | None
+    permissions: str | None
+    features: list[str] | None
+    approximate_member_count: int | None
+    approximate_presence_count: int | None
 
 
 class ServerModel(BaseModel):
@@ -55,3 +69,52 @@ class ChannelsRequest(BaseModel):
     channels: dict[str, list[str]]
     limit: int | None = Field(None, ge=0, le=100)
     type: str
+
+
+class CompaniesRequest(BaseModel):
+    """Companies request model for Discord data."""
+
+    task_id: int
+    companies: dict[str, dict[str, list[str]]]
+
+
+class ResponseModel(BaseModel):
+    """Response model for Discord data."""
+
+    source_name: str
+    company_id: str
+    raw_data: ServerModel
+
+
+class DiscoveryRequest(BaseModel):
+    """Request model for the discovery endpoint."""
+
+    company_id: str
+    name: str
+
+
+class DiscoveryResponse(BaseModel):
+    """Define the output model for the discovery endpoint."""
+
+    server_ids: list[str] = []
+
+
+class FinalDiscoveryResponse(BaseModel):
+    """Define the final discovery response model."""
+
+    identifiers: dict[str, DiscoveryResponse]
+    validity: datetime
+
+
+class ErrorInfoModel(BaseModel):
+    """Error info for the crawling_finished endpoint."""
+
+    error_type: str
+    error_description: str | None
+
+
+class CrawlingFinishedInputModel(BaseModel):
+    """Internal base model for the crawling_finished endpoints."""
+
+    task_id: int
+    errors: dict[str, ErrorInfoModel] | None = None
